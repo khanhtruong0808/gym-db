@@ -1,156 +1,141 @@
 import java.sql.*;
 import java.util.ArrayList;
-import java.util.Properties;
 import java.util.Scanner;
 
 class GymServer {
-    public static Connection dbConnection = null;
-    public static int currentId;
+    private static final String URL = "jdbc:mysql://us-cdbr-east-06.cleardb" +
+            ".net:3306/heroku_0b040dc21d79a35";
+    private static final String USER = "bd4c73f56309eb";
+    private static String PASS = "c94c82ad";
+    private static int currentId;
+    private static Scanner scanner = new Scanner(System.in);
 
-public static void main(String[] args) throws Exception {
-    getConnection();
+    public static void main(String[] args) throws Exception {
+        setCurrentId();
 
-    // If a connection wasn't established exit
-    if(dbConnection == null){
-        return;
-    }
+        Scanner getChar = new Scanner(System.in);
+        String input;
 
-    setCurrentId();
+        System.out.println("Would you like to insert an item? Y/N");
+        input = getChar.nextLine();
+        while (input.toLowerCase().charAt(0) != 'n') {
+            post();
 
-    Scanner getChar = new Scanner(System.in);
-    String input;
+            System.out.println();
+            System.out.println("Would you like to INSERT another item? Y/N");
+            input = getChar.nextLine();
+        }
 
-    System.out.println("Would you like to insert an item? Y/N");
-    input = getChar.nextLine();
-    while( input.toLowerCase().charAt(0) != 'n'){
-        post();
+        System.out.println("Current Table Data: ");
+        ArrayList<String> queryList = getTableData();
+        if (queryList != null) {
+            for (String name : queryList) {
+                System.out.println(name);
+            }
+        }
+        System.out.println();
+        System.out.println();
+
+        System.out.println("Would you like to DELETE an item? Y/N");
+        input = getChar.nextLine();
+        while (input.toLowerCase().charAt(0) != 'n') {
+            delete();
+
+            System.out.println();
+            System.out.println("Would you like to DELETE another item? Y/N");
+            input = getChar.nextLine();
+        }
 
         System.out.println();
-        System.out.println("Would you like to INSERT another item? Y/N");
-        input = getChar.nextLine();
-    }
-
-    System.out.println("Current Table Data: ");
-    ArrayList<String> queryList = getTableData();
-    if(queryList != null){
-        for(String name: queryList){
-            System.out.println(name);
-        }
-    }
-    System.out.println();
-    System.out.println();
-
-    System.out.println("Would you like to DELETE an item? Y/N");
-    input = getChar.nextLine();
-   while( input.toLowerCase().charAt(0) != 'n'){
-       delete();
-
-       System.out.println();
-       System.out.println("Would you like to DELETE another item? Y/N");
-       input = getChar.nextLine();
-   }
-
-   System.out.println();
-   System.out.println("Current Table Data: ");
-   queryList = getTableData();
-    if(queryList != null){
-        for(String name: queryList){
-            System.out.println(name);
-        }
-    }
-
-    dbConnection.close();
-}
-
-
-public static void getConnection() throws Exception {
-    if(dbConnection == null) {
-        try {
-            String url = "jdbc:mysql://us-cdbr-east-06.cleardb" +
-                    ".net:3306/heroku_0b040dc21d79a35";
-            Properties info = new Properties();
-            info.put("user", "bd4c73f56309eb");
-            info.put("password", "c94c82ad");
-            Class.forName("com.mysql.cj.jdbc.Driver");
-            dbConnection = DriverManager.getConnection(url, info);
-
-            if (dbConnection != null) {
-                System.out.println("Successfully connected to MySQL database");
+        System.out.println("Current Table Data: ");
+        queryList = getTableData();
+        if (queryList != null) {
+            for (String name : queryList) {
+                System.out.println(name);
             }
-        } catch (Exception e) {
-            System.out.println("An error occurred while connecting MySQL " +
-                    "clear database");
+        }
+    }
+
+
+    public static ArrayList<String> getTableData() throws Exception {
+
+        DriverManager.registerDriver(new com.mysql.cj.jdbc.Driver());
+        String sqlString = "SELECT * FROM gym";
+
+        try (Connection conn = DriverManager.getConnection(URL, USER, PASS);
+             PreparedStatement getting = conn.prepareStatement(sqlString);) {
+
+            ResultSet result = getting.executeQuery();
+
+            ArrayList<String> array = new ArrayList<String>();
+
+            while (result.next()) {
+                array.add(result.getInt("id") + " " + result.getString(
+                        "gym_name") + " " +
+                        result.getString("location"));
+            }
+
+            conn.close();
+            return array;
+        } catch (SQLException e) {
+            System.out.println("There was a problem with your query");
             e.printStackTrace();
         }
+
+        return null;
     }
-}
 
-public static ArrayList<String> getTableData() throws Exception {
-    try{
-        PreparedStatement statement = dbConnection.prepareStatement("SELECT " +
-                "* FROM gym");
+    public static void post() throws SQLException {
 
-        ResultSet result = statement.executeQuery();
+        System.out.print("Type a Gym name: ");
+        String gymName = scanner.nextLine();
 
-        ArrayList<String> array = new ArrayList<String>();
+        String sqlString = "INSERT INTO gym VALUES('" + (currentId++) + "', '"
+                + gymName + "'," + "'city name here')";
 
-        while(result.next()){
-            array.add(result.getInt("id")+ " "+ result.getString(
-                    "gym_name") + " " + result.getString("location"));
+        try (Connection conn = DriverManager.getConnection(URL, USER, PASS);
+             PreparedStatement posting = conn.prepareStatement(sqlString);) {
+
+            posting.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println("An error occurred while INSERTING");
+            e.printStackTrace();
         }
 
-        return array;
-    } catch (Exception e) {
-        System.out.println("There was a problem with your query");
-        e.printStackTrace();
     }
 
-    return null;
-}
+    public static void delete() throws SQLException {
 
-public static void post() throws Exception{
-    Scanner getInpt = new Scanner(System.in);
-    System.out.print("Type a Gym name: ");
-    String gymName = getInpt.nextLine();
-    try {
-        PreparedStatement posted = dbConnection.prepareStatement("INSERT INTO" +
-                " gym VALUES('" + (currentId++) + "', '"+ gymName + "',"+
-                "'city name here')");
-        posted.executeUpdate();
-    } catch(Exception e){
-        System.out.println("An error occurred while INSERTING");
-        e.printStackTrace();
-    }
-}
+        System.out.print("Type the gym name of the row data you want to " +
+                "delete: ");
+        String gymName = scanner.nextLine();
 
-public static void delete() throws Exception{
-    Scanner getInpt = new Scanner(System.in);
-    System.out.print("Type the gym name of the row data you want to delete:" +
-            " ");
-    String gymName = getInpt.nextLine();
+        String sqlString = "DELETE from gym WHERE gym_name='" + gymName + "'";
 
-    try {
-        PreparedStatement deleteing = dbConnection.prepareStatement("DELETE " +
-                "from" +
-                " gym WHERE gym_name='"+gymName+"'");
-            deleteing.executeUpdate();
-        } catch(Exception e){
+        DriverManager.registerDriver(new com.mysql.cj.jdbc.Driver());
+
+        try (Connection conn = DriverManager.getConnection(URL, USER, PASS);
+             PreparedStatement deleting = conn.prepareStatement(sqlString);) {
+
+            deleting.executeUpdate();
+        } catch (SQLException e) {
             System.out.println("An error occurred while DELETING");
             e.printStackTrace();
         }
     }
 
-    public static void setCurrentId() throws Exception {
-        try{
-            PreparedStatement statement = dbConnection.prepareStatement("SELECT " +
-                    "MAX(id) FROM gym");
+    public static void setCurrentId() throws SQLException {
+        String sqlString = "SELECT MAX(id) FROM gym";
+        DriverManager.registerDriver(new com.mysql.cj.jdbc.Driver());
+        try (Connection conn = DriverManager.getConnection(URL, USER,
+                PASS);
+             PreparedStatement statement = conn.prepareStatement(sqlString);) {
 
             ResultSet result = statement.executeQuery();
 
             result.next();
-            currentId = result.getInt("MAX(id)")+1;
-            System.out.println(currentId);
-        } catch (Exception e) {
+            currentId = result.getInt("MAX(id)") + 1;
+        } catch (SQLException e) {
             System.out.println("There was a problem with your id query");
             e.printStackTrace();
         }
