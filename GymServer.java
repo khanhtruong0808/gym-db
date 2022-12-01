@@ -5,13 +5,17 @@ import java.util.Scanner;
 
 class GymServer {
     public static Connection dbConnection = null;
+    public static int currentId;
 
 public static void main(String[] args) throws Exception {
     getConnection();
 
+    // If a connection wasn't established exit
     if(dbConnection == null){
         return;
     }
+
+    setCurrentId();
 
     Scanner getChar = new Scanner(System.in);
     String input;
@@ -48,7 +52,6 @@ public static void main(String[] args) throws Exception {
 
    System.out.println();
    System.out.println("Current Table Data: ");
-//   queryList.remove(queryList);
    queryList = getTableData();
     if(queryList != null){
         for(String name: queryList){
@@ -64,10 +67,10 @@ public static void getConnection() throws Exception {
     if(dbConnection == null) {
         try {
             String url = "jdbc:mysql://us-cdbr-east-06.cleardb" +
-                    ".net:3306/heroku_71b8fb4417fe1c3";
+                    ".net:3306/heroku_0b040dc21d79a35";
             Properties info = new Properties();
-            info.put("user", "b6ea9084c13b7f");
-            info.put("password", "088a9ca9");
+            info.put("user", "bd4c73f56309eb");
+            info.put("password", "c94c82ad");
             Class.forName("com.mysql.cj.jdbc.Driver");
             dbConnection = DriverManager.getConnection(url, info);
 
@@ -84,17 +87,16 @@ public static void getConnection() throws Exception {
 
 public static ArrayList<String> getTableData() throws Exception {
     try{
-//        Connection dbConnection = getConnection();
         PreparedStatement statement = dbConnection.prepareStatement("SELECT " +
-                "fname, lname FROM smallTest");
+                "* FROM gym");
 
         ResultSet result = statement.executeQuery();
 
         ArrayList<String> array = new ArrayList<String>();
 
         while(result.next()){
-            array.add(result.getString("fname") + " "+ result.getString(
-                    "lname"));
+            array.add(result.getInt("id")+ " "+ result.getString(
+                    "gym_name") + " " + result.getString("location"));
         }
 
         return array;
@@ -108,14 +110,12 @@ public static ArrayList<String> getTableData() throws Exception {
 
 public static void post() throws Exception{
     Scanner getInpt = new Scanner(System.in);
-    System.out.print("Type fname: ");
-    String var1 = getInpt.nextLine();
-    System.out.print("Type lname: ");
-    String var2 = getInpt.nextLine();
+    System.out.print("Type a Gym name: ");
+    String gymName = getInpt.nextLine();
     try {
-//        Connection dbConnection = getConnection();
         PreparedStatement posted = dbConnection.prepareStatement("INSERT INTO" +
-                " smallTest VALUES('"+var1 + "','" + var2 + "')");
+                " gym VALUES('" + currentId++ + "', '"+ gymName + "',"+
+                "'city name here')");
         posted.executeUpdate();
     } catch(Exception e){
         System.out.println("An error occurred while INSERTING");
@@ -125,18 +125,32 @@ public static void post() throws Exception{
 
 public static void delete() throws Exception{
     Scanner getInpt = new Scanner(System.in);
-    System.out.print("Type the first name of the row data you want to delete:" +
+    System.out.print("Type the gym name of the row data you want to delete:" +
             " ");
-    String var1 = getInpt.nextLine();
+    String gymName = getInpt.nextLine();
 
     try {
-//        Connection dbConnection = getConnection();
         PreparedStatement deleteing = dbConnection.prepareStatement("DELETE " +
                 "from" +
-                " smallTest WHERE fname='"+var1+"'");
+                " gym WHERE gym_name='"+gymName+"'");
             deleteing.executeUpdate();
         } catch(Exception e){
             System.out.println("An error occurred while DELETING");
+            e.printStackTrace();
+        }
+    }
+
+    public static void setCurrentId() throws Exception {
+        try{
+            PreparedStatement statement = dbConnection.prepareStatement("SELECT " +
+                    "MAX(id) FROM gym");
+
+            ResultSet result = statement.executeQuery();
+
+            currentId = result.getRow();
+            currentId++;
+        } catch (Exception e) {
+            System.out.println("There was a problem with your id query");
             e.printStackTrace();
         }
     }
