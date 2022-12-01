@@ -114,7 +114,7 @@ public static void post() throws Exception{
     String gymName = getInpt.nextLine();
     try {
         PreparedStatement posted = dbConnection.prepareStatement("INSERT INTO" +
-                " gym VALUES('" + currentId++ + "', '"+ gymName + "',"+
+                " gym VALUES('" + (currentId++) + "', '"+ gymName + "',"+
                 "'city name here')");
         posted.executeUpdate();
     } catch(Exception e){
@@ -147,8 +147,9 @@ public static void delete() throws Exception{
 
             ResultSet result = statement.executeQuery();
 
-            currentId = result.getRow();
-            currentId++;
+            result.next();
+            currentId = result.getInt("MAX(id)")+1;
+            System.out.println(currentId);
         } catch (Exception e) {
             System.out.println("There was a problem with your id query");
             e.printStackTrace();
