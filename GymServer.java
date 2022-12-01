@@ -11,6 +11,7 @@ class GymServer {
     private static Scanner scanner = new Scanner(System.in);
 
     public static void main(String[] args) throws Exception {
+        // Current main code is purely to test functions
         setCurrentId();
 
         Scanner getChar = new Scanner(System.in);
@@ -19,7 +20,7 @@ class GymServer {
         System.out.println("Would you like to insert an item? Y/N");
         input = getChar.nextLine();
         while (input.toLowerCase().charAt(0) != 'n') {
-            post();
+            insert();
 
             System.out.println();
             System.out.println("Would you like to INSERT another item? Y/N");
@@ -27,7 +28,7 @@ class GymServer {
         }
 
         System.out.println("Current Table Data: ");
-        ArrayList<String> queryList = getTableData();
+        ArrayList<String> queryList = select();
         if (queryList != null) {
             for (String name : queryList) {
                 System.out.println(name);
@@ -48,7 +49,7 @@ class GymServer {
 
         System.out.println();
         System.out.println("Current Table Data: ");
-        queryList = getTableData();
+        queryList = select();
         if (queryList != null) {
             for (String name : queryList) {
                 System.out.println(name);
@@ -57,21 +58,21 @@ class GymServer {
     }
 
 
-    public static ArrayList<String> getTableData() throws Exception {
+    public static ArrayList<String> select() throws Exception {
 
         DriverManager.registerDriver(new com.mysql.cj.jdbc.Driver());
         String sqlString = "SELECT * FROM gym";
 
         try (Connection conn = DriverManager.getConnection(URL, USER, PASS);
-             PreparedStatement getting = conn.prepareStatement(sqlString);) {
+             PreparedStatement statement = conn.prepareStatement(sqlString);) {
 
-            ResultSet result = getting.executeQuery();
+            ResultSet result = statement.executeQuery();
 
             ArrayList<String> array = new ArrayList<String>();
 
             while (result.next()) {
-                array.add(result.getInt("id") + " " + result.getString(
-                        "gym_name") + " " +
+                array.add(result.getInt("id") + " " +
+                        result.getString("gym_name") + " " +
                         result.getString("location"));
             }
 
@@ -85,7 +86,7 @@ class GymServer {
         return null;
     }
 
-    public static void post() throws SQLException {
+    public static void insert() throws SQLException {
 
         System.out.print("Type a Gym name: ");
         String gymName = scanner.nextLine();
@@ -94,9 +95,9 @@ class GymServer {
                 + gymName + "'," + "'city name here')";
 
         try (Connection conn = DriverManager.getConnection(URL, USER, PASS);
-             PreparedStatement posting = conn.prepareStatement(sqlString);) {
+             PreparedStatement statement = conn.prepareStatement(sqlString);) {
 
-            posting.executeUpdate();
+            statement.executeUpdate();
         } catch (SQLException e) {
             System.out.println("An error occurred while INSERTING");
             e.printStackTrace();
