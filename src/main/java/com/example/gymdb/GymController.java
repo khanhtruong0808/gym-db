@@ -13,4 +13,11 @@ public class GymController {
         // performs a sql insert based on gym_name passed in URL
         InsertSelectStatements.insert(gym_name);
     }
+
+    // route for select
+    @GetMapping("/select")
+    public void gym() {
+        // will return JSON later
+        InsertSelectStatements.select();
+    }
 }
