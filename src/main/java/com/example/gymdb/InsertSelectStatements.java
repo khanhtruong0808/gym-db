@@ -17,9 +17,10 @@ public class InsertSelectStatements {
     private static final String PASS = "c94c82ad";
 
     // Gym locations to set
-    private static final String[] locations = { "LA", "Sacramento", "Rancho Cordova", "Elk Grove", "Davis" };
+    private static final String[] locations = { "LA", "Sacramento", "Rancho Cordova", "Elk Grove", "Davis",
+            "San Francisco", "San Jose", "Palo Alto", "Berkeley", "Stockton" };
 
-    // Inserts gym_name based on URL
+    // Inserts gym_name to DB based on URL
     static void insert(String gym_name) {
         DriverManager.setLoginTimeout(5);
         String insertString = "INSERT INTO gym VALUES (?,?,?)";
@@ -29,7 +30,7 @@ public class InsertSelectStatements {
             stmt.setInt(1, id);
             stmt.setString(2, gym_name);
             // random index from 0 - 4
-            double rand = Math.random() * 5;
+            double rand = Math.random() * 10;
             String location = locations[(int) rand];
             stmt.setString(3, location);
             stmt.executeUpdate();
@@ -65,7 +66,7 @@ public class InsertSelectStatements {
         return gyms;
     }
 
-    // Grabs current highest Gym ID + 1
+    // Queries DB, returns current highest Gym ID + 1
     private static int setID() {
         String sqlString = "SELECT MAX(id) FROM gym";
         try (Connection conn = DriverManager.getConnection(URL, USER, PASS);
