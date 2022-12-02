@@ -1,6 +1,6 @@
 package com.example.gymdb;
 
-import java.util.ArrayList;
+import java.util.*;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -18,7 +18,7 @@ public class GymController {
 
     // route for select
     @GetMapping("/select")
-    public ArrayList<Gym> gym() {
-        return InsertSelectStatements.select();
+    public Object[] gym() {
+        return InsertSelectStatements.select().toArray();
     }
 }

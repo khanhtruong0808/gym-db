@@ -2,32 +2,30 @@
 <html>
 
 <head>
-  <script src="index.js"></script>
-  <title>CSC 174</title>
-  <link rel="stylesheet" href="style.css">
+    <title>CSC 174</title>
+    <link href="style.css" rel="stylesheet">
+    <script defer src="index.js"></script>
 </head>
 
 <body>
-  <header>
+<header>
     <h1>CSC 174 Project</h1>
-  </header>
-  <main>
+</header>
+<main>
     <fieldset>
-      <legend id="table-legend">Database Table</legend>
-      <div id="result-div">
-        <h2>Result:</h2>
-        <div id="result"></div>
-      </div>
+        <legend id="table-legend">Database Table</legend>
+        <div id="result-div">
+            <h2>Result:</h2>
+            <div id="result"></div>
+        </div>
 
     </fieldset>
     <fieldset id="gym-fieldset">
-      <legend>Enter Gym Name</legend>
-      <textarea id="input-text" rows="5" cols="60" placeholder="Enter Gym Name Here (Up to 25 characters)"></textarea>
-      <button onclick="">Enter</button>
+        <legend>Enter Gym Name</legend>
+        <textarea cols="60" id="input-text" placeholder="Enter Gym Name Here (Up to 25 characters)"
+                  rows="5"></textarea>
+        <button onclick="insert()">Enter</button>
     </fieldset>
-
-
-  </main>
+</main>
 </body>
-
 </html>
