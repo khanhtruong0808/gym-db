@@ -10,9 +10,9 @@ import org.springframework.web.bind.annotation.RestController;
 public class GymController {
 
     // route for inserting
+    // performs sql insert based on url param
     @GetMapping("/insert")
     public void gym(@RequestParam(value = "gym_name") String gym_name) {
-        // performs a sql insert based on gym_name passed in URL
         InsertSelectStatements.insert(gym_name);
     }
 
