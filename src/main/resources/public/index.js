@@ -55,20 +55,13 @@ fetch('https://gym-db-174.herokuapp.com/select', getconfig)
     document.getElementById('result').appendChild(table);
 }).catch(err => console.log("err", err));
 
-
-// Post Config settings
-let postconfig = {
-    method: "post"
-};
-
-
 // Insert function, called when enter is clicked
 function insert() {
     let gymName = document.getElementById('input-text').value;
 
     let url = "https://gym-db-174.herokuapp.com/insert?gym_name=" + gymName;
 
-    fetch(url, postconfig).then((data) => {
+    fetch(url).then((data) => {
         console.log(data);
     }).catch(err => console.log("err", err));
 }
