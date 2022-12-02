@@ -58,9 +58,7 @@ fetch('https://gym-db-174.herokuapp.com/select', getconfig)
 
 // Post Config settings
 let postconfig = {
-    method: "post", headers: {
-        'Content-Type': 'text/plain'
-    },
+    method: "post"
 };
 
 
