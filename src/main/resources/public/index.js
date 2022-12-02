@@ -53,6 +53,7 @@ function getGymData() {
         }
 
         // Appending built table to div with id=result
+        document.getElementById('result').innerHTML = '';
         document.getElementById('result').appendChild(table);
     }).catch(err => console.log("err", err));
 }
