@@ -68,7 +68,7 @@ let postconfig = {
 function insert() {
     let gymName = document.getElementById('input-text').value;
 
-    let url = "https://gym-db-174.herokuapp.com//insert?gym_name=" + gymName;
+    let url = "https://gym-db-174.herokuapp.com/insert?gym_name=" + gymName;
 
     fetch(url, postconfig).then((data) => {
         console.log(data);
