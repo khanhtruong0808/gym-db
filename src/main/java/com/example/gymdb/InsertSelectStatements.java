@@ -9,7 +9,7 @@ import java.sql.Statement;
 
 public class InsertSelectStatements {
     // static variable to act as arbritrary ID
-    private static int id = 1;
+    private static int id = InsertSelectStatements.setID();
     static final String URL = "jdbc:mysql://us-cdbr-east-06.cleardb.net:3306/heroku_0b040dc21d79a35";
     static final String USER = "bd4c73f56309eb";
     static final String PASS = "c94c82ad";
@@ -55,5 +55,22 @@ public class InsertSelectStatements {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+    }
+
+    private static int setID() {
+        String sqlString = "SELECT MAX(id) FROM gym";
+        try (Connection conn = DriverManager.getConnection(URL, USER, PASS);
+             PreparedStatement stmt = conn.prepareStatement(sqlString)) {
+
+            ResultSet result = stmt.executeQuery();
+
+            result.next();
+            int tempid = result.getInt("MAX(id)") + 1;
+            return tempid;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return 1;
     }
 }
