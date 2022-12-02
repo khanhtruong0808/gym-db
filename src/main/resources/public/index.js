@@ -57,6 +57,8 @@ function getGymData() {
     }).catch(err => console.log("err", err));
 }
 
+getGymData();
+
 // Insert function, called when enter is clicked
 function insert() {
     let gymName = document.getElementById('input-text').value;
