@@ -5,7 +5,7 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
+import java.util.ArrayList;
 
 public class InsertSelectStatements {
     // static variable to act as arbritrary ID
@@ -35,7 +35,8 @@ public class InsertSelectStatements {
         id++;
     }
 
-    static void select() {
+    static ArrayList<Gym> select() {
+        ArrayList<Gym> gyms = new ArrayList<Gym>();
         try (Connection conn = DriverManager.getConnection(URL, USER, PASS);
                 PreparedStatement stmt = conn.prepareStatement("SELECT * FROM gym", ResultSet.TYPE_SCROLL_SENSITIVE,
                         ResultSet.CONCUR_UPDATABLE)) {
@@ -48,13 +49,13 @@ public class InsertSelectStatements {
                 int id = rs.getInt(1);
                 String gym_name = rs.getString(2);
                 String location = rs.getString(3);
-                System.out.println(
-                        "Gym ID: " + Integer.toString(id) + " Gym Name: " + gym_name + " Gym Location: " + location);
+                gyms.add(new Gym(id, gym_name, location));
                 hasMoreRows = rs.next();
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        return gyms;
     }
 
     private static int setID() {
