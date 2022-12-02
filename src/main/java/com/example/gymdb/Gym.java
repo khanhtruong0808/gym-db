@@ -1,6 +1,7 @@
 package com.example.gymdb;
 
 public class Gym {
+    // Gym class used to return array list of gyms later
     private final int id;
     private final String gym_name;
     private final String location;

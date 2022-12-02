@@ -10,11 +10,15 @@ import java.util.ArrayList;
 public class InsertSelectStatements {
     // static variable to act as arbritrary ID
     private static int id = InsertSelectStatements.setID();
-    static final String URL = "jdbc:mysql://us-cdbr-east-06.cleardb.net:3306/heroku_0b040dc21d79a35";
-    static final String USER = "bd4c73f56309eb";
-    static final String PASS = "c94c82ad";
 
-    // Function to connect to MySQL database
+    // MySQL connection info
+    private static final String URL = "jdbc:mysql://us-cdbr-east-06.cleardb.net:3306/heroku_0b040dc21d79a35";
+    private static final String USER = "bd4c73f56309eb";
+    private static final String PASS = "c94c82ad";
+
+    // Gym locations to set
+    private static final String[] locations = { "LA", "Sacramento", "Rancho Cordova", "Elk Grove", "Davis" };
+
     // Inserts gym_name based on URL
     static void insert(String gym_name) {
         DriverManager.setLoginTimeout(5);
@@ -24,17 +28,20 @@ public class InsertSelectStatements {
             conn.setAutoCommit(false);
             stmt.setInt(1, id);
             stmt.setString(2, gym_name);
-            // location
-            stmt.setString(3, "LA");
+            // random index from 0 - 4
+            double rand = Math.random() * 5;
+            String location = locations[(int) rand];
+            stmt.setString(3, location);
             stmt.executeUpdate();
             conn.commit();
-            System.out.println("Success. Gym ID: " + id + " Gym Name: " + gym_name + " Gym Location: LA");
+            System.out.println("Success. Gym ID: " + id + " Gym Name: " + gym_name + " Gym Location: " + location);
         } catch (Exception e) {
             System.out.println("Error:" + e);
         }
         id++;
     }
 
+    // Queries DB, returns ArrayList of all gyms
     static ArrayList<Gym> select() {
         ArrayList<Gym> gyms = new ArrayList<Gym>();
         try (Connection conn = DriverManager.getConnection(URL, USER, PASS);
@@ -58,10 +65,11 @@ public class InsertSelectStatements {
         return gyms;
     }
 
+    // Grabs current highest Gym ID + 1
     private static int setID() {
         String sqlString = "SELECT MAX(id) FROM gym";
         try (Connection conn = DriverManager.getConnection(URL, USER, PASS);
-             PreparedStatement stmt = conn.prepareStatement(sqlString)) {
+                PreparedStatement stmt = conn.prepareStatement(sqlString)) {
 
             ResultSet result = stmt.executeQuery();
 
