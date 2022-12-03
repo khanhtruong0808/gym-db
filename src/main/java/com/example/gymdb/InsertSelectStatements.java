@@ -44,6 +44,7 @@ public class InsertSelectStatements {
             // prints out error if any
             System.out.println("Error:" + e);
         }
+        id++;
     }
 
     // Queries DB, returns ArrayList of all gyms
