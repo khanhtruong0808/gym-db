@@ -1,3 +1,14 @@
+// Adding event listener to textarea to handle errors
+let textArea = document.getElementById('input-text');
+textArea.addEventListener("focus", function(event){
+    if(textArea.id != 'input-text'){
+        textArea.placeholder = "Enter Gym Name Here (Up to 25 characters)";
+        textArea.id = 'input-text';
+    }
+})
+
+
+
 // Get config settings
 let getconfig = {
     method: "get", headers: {
@@ -64,11 +75,24 @@ getGymData();
 function insert() {
     let gymName = document.getElementById('input-text').value;
 
-    let url = "https://gym-db-174.herokuapp.com/insert?gym_name=" + gymName;
+    if(gymName.length != 0 ){
+        if(gymName > 25){
+            textArea.value = '';
+            textArea.id = "input-text-error"
+            textArea.placeholder = "Please limited text to 25 characters!";
+        } else {
+            let url = "https://gym-db-174.herokuapp.com/insert?gym_name="+gymName;
 
-    fetch(url).then((data) => {
-        console.log(data);
-        getGymData();
-        document.getElementById('input-text').value = '';
-    }).catch(err => console.log("err", err));
+            fetch(url).then((data) => {
+                console.log(data);
+                getGymData();
+                textArea.id = 'input-text-success'
+                textArea.value = '';
+                setTimeout(textArea.id = 'input-text', 3000);
+            }).catch(err => console.log("err", err));
+        }
+    } else {
+        textArea.id = "input-text-error"
+        textArea.placeholder = "You can't submit an empty value!";
+    }
 }

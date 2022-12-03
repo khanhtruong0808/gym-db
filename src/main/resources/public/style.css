@@ -99,3 +99,16 @@ td, th {
 td {
     text-align: center;
 }
+
+#input-text-error {
+    border: 2px solid red;
+    font-size: 1.2rem;
+}
+
+#input-text-error::placeholder {
+    color:red;
+}
+
+#input-text-success {
+    border: 2px solid green;
+}

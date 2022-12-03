@@ -13,7 +13,7 @@
 </header>
 <main>
     <fieldset>
-        <legend id="table-legend">Database Table</legend>
+        <legend id="table-legend">Database Table: Gym</legend>
         <div id="result-div">
             <h2>Result:</h2>
             <div id="result"></div>
@@ -22,9 +22,10 @@
     </fieldset>
     <fieldset id="gym-fieldset">
         <legend>Enter Gym Name</legend>
-        <textarea cols="60" id="input-text" placeholder="Enter Gym Name Here (Up to 25 characters)"
-                  rows="5"></textarea>
-        <button onclick="insert()">Enter</button>
+        <textarea cols="60" id="input-text"
+                  placeholder="Enter Gym Name Here (Up to 25 characters)"
+                  rows="5" name="normal"></textarea>
+        <button onclick="insert(); return false;">Enter</button>
     </fieldset>
 </main>
 </body>
