@@ -78,7 +78,7 @@ public class InsertSelectStatements {
             // Prepared statement is executed
             ResultSet result = stmt.executeQuery();
 
-            // I get the result and sum 1, this is the next available id
+            // get result as an int and sum 1, this is the next available id
             result.next();
             int tempid = result.getInt("MAX(id)") + 1;
 
