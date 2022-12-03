@@ -86,9 +86,9 @@ function insert() {
             fetch(url).then((data) => {
                 console.log(data);
                 getGymData();
-                textArea.id = 'input-text-success'
+                textArea.id = "input-text-success";
                 textArea.value = '';
-                setTimeout(textArea.id = 'input-text', 3000);
+                setTimeout(textArea.id = "input-text", 4000);
             }).catch(err => console.log("err", err));
         }
     } else {
