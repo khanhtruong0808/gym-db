@@ -75,21 +75,24 @@ public class InsertSelectStatements {
         return gyms;
     }
 
-    // Queries DB, returns current highest Gym ID + 1
+    // Queries DB, returns current next available id number
     private static int setID() {
-        // sql string for query
+        // sql string for query to get the highest current id
         String sqlString = "SELECT MAX(id) FROM gym";
-        // connects and automatically closes connections
+        // connects and makes prepared statement
         try (Connection conn = DriverManager.getConnection(URL, USER, PASS);
                 PreparedStatement stmt = conn.prepareStatement(sqlString)) {
-
+            // Executes prepared statement
             ResultSet result = stmt.executeQuery();
 
+            // Gets result as an int and sums by 1
             result.next();
             int tempid = result.getInt("MAX(id)") + 1;
+            
+            // Returns tempid (next available id)
             return tempid;
         } catch (SQLException e) {
-            // prints out error if any
+            // prints out error
             e.printStackTrace();
         }
         // defaults id to 1 if error occurs
