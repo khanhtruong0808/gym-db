@@ -63,9 +63,8 @@ function getGymData() {
             cell.appendChild(ctext);
         }
 
-        // Appending built table to div with id=result
-        document.getElementById('result').innerHTML = '';
-        document.getElementById('result').appendChild(table);
+        // Replace value in div#result with the current table
+        document.getElementById('result').replaceChildren(table);
     }).catch(err => console.log("err", err));
 }
 
@@ -86,9 +85,7 @@ function insert() {
             fetch(url).then((data) => {
                 console.log(data);
                 getGymData();
-                textArea.id = "input-text-success";
                 textArea.value = '';
-                setTimeout(textArea.id = "input-text", 4000);
             }).catch(err => console.log("err", err));
         }
     } else {

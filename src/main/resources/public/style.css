@@ -108,7 +108,3 @@ td {
 #input-text-error::placeholder {
     color:red;
 }
-
-#input-text-success {
-    border: 2px solid green;
-}
