@@ -8,48 +8,59 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 public class InsertSelectStatements {
-    // MySQL connection info
-    private static final String URL = "jdbc:mysql://us-cdbr-east-06.cleardb" +
-            ".net:3306/heroku_0b040dc21d79a35";
-    private static final String USER = "bd4c73f56309eb";
-    private static final String PASS = "c94c82ad";
-    // Gym locations to set
-    private static final String[] locations = {"LA", "Sacramento", "Rancho " +
-            "Cordova", "Elk Grove", "Davis", "San Francisco", "San Jose",
-            "Palo Alto", "Berkeley", "Stockton"};
     // static variable to act as arbritrary ID
     private static int id = InsertSelectStatements.setID();
+
+    // MySQL connection info
+    private static final String URL = "jdbc:mysql://us-cdbr-east-06.cleardb.net:3306/heroku_0b040dc21d79a35";
+    private static final String USER = "bd4c73f56309eb";
+    private static final String PASS = "c94c82ad";
+
+    // Gym locations to set
+    private static final String[] locations = { "LA", "Sacramento", "Rancho Cordova", "Elk Grove", "Davis",
+            "San Francisco", "San Jose", "Palo Alto", "Berkeley", "Stockton" };
 
     // Inserts gym_name to DB based on URL
     static void insert(String gym_name) {
         DriverManager.setLoginTimeout(5);
+        // SQL Insert string to insert gym_id, gym_name, location
         String insertString = "INSERT INTO gym VALUES (?,?,?)";
-        try (Connection conn = DriverManager.getConnection(URL, USER, PASS); PreparedStatement stmt = conn.prepareStatement(insertString)) {
+        // connects and automatically closes sql connection
+        try (Connection conn = DriverManager.getConnection(URL, USER, PASS);
+                PreparedStatement stmt = conn.prepareStatement(insertString)) {
             conn.setAutoCommit(false);
+            // set variables in prepared statements
             stmt.setInt(1, id);
             stmt.setString(2, gym_name);
             // random index from 0 - 4
             double rand = Math.random() * 10;
             String location = locations[(int) rand];
             stmt.setString(3, location);
+            // commits sql statement
             stmt.executeUpdate();
             conn.commit();
             System.out.println("Success. Gym ID: " + id + " Gym Name: " + gym_name + " Gym Location: " + location);
         } catch (Exception e) {
+            // prints out error if any
             System.out.println("Error:" + e);
         }
-        id++;
     }
 
     // Queries DB, returns ArrayList of all gyms
     static ArrayList<Gym> select() {
         ArrayList<Gym> gyms = new ArrayList<Gym>();
-        try (Connection conn = DriverManager.getConnection(URL, USER, PASS); PreparedStatement stmt = conn.prepareStatement("SELECT * FROM gym", ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE)) {
+        // connects and automatically closes sql connection
+        try (Connection conn = DriverManager.getConnection(URL, USER, PASS);
+                PreparedStatement stmt = conn.prepareStatement("SELECT * FROM gym", ResultSet.TYPE_SCROLL_SENSITIVE,
+                        ResultSet.CONCUR_UPDATABLE)) {
+            // iterator for query results
             ResultSet rs = stmt.executeQuery();
             boolean hasMoreRows = rs.first();
+            // if there are no rows, print so in console
             if (!hasMoreRows) {
                 System.out.println("No rows returned");
             }
+            // loop all rows and add to array list
             while (hasMoreRows) {
                 int id = rs.getInt(1);
                 String gym_name = rs.getString(2);
@@ -58,31 +69,30 @@ public class InsertSelectStatements {
                 hasMoreRows = rs.next();
             }
         } catch (SQLException e) {
+            // prints out error if any
             e.printStackTrace();
         }
         return gyms;
     }
 
-    // Queries DB and returns the next available id
+    // Queries DB, returns current highest Gym ID + 1
     private static int setID() {
-        // query statement to get the highest id in table gym
+        // sql string for query
         String sqlString = "SELECT MAX(id) FROM gym";
+        // connects and automatically closes connections
+        try (Connection conn = DriverManager.getConnection(URL, USER, PASS);
+                PreparedStatement stmt = conn.prepareStatement(sqlString)) {
 
-        // Establishing a connection and using it to make a prepared statement
-        try (Connection conn = DriverManager.getConnection(URL, USER, PASS); PreparedStatement stmt = conn.prepareStatement(sqlString)) {
-
-            // Prepared statement is executed
             ResultSet result = stmt.executeQuery();
 
-            // get result as an int and sum 1, this is the next available id
             result.next();
             int tempid = result.getInt("MAX(id)") + 1;
-
-            // return value
             return tempid;
         } catch (SQLException e) {
+            // prints out error if any
             e.printStackTrace();
         }
+        // defaults id to 1 if error occurs
         return 1;
     }
 }
