@@ -58,9 +58,9 @@ button {
 }
 
 button:hover {
-  background-color: white;
-  color: black;
-  cursor: pointer;
+    background-color: white;
+    color: black;
+    cursor: pointer;
 }
 
 #result {
@@ -107,5 +107,5 @@ td {
 }
 
 #input-text-error::placeholder {
-    color:red;
+    color: red;
 }

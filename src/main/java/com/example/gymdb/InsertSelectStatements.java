@@ -8,24 +8,23 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 public class InsertSelectStatements {
-    // static variable to act as arbritrary ID
-    private static int id = InsertSelectStatements.setID();
-
     // MySQL connection info
-    private static final String URL = "jdbc:mysql://us-cdbr-east-06.cleardb.net:3306/heroku_0b040dc21d79a35";
+    private static final String URL = "jdbc:mysql://us-cdbr-east-06.cleardb" +
+            ".net:3306/heroku_0b040dc21d79a35";
     private static final String USER = "bd4c73f56309eb";
     private static final String PASS = "c94c82ad";
-
     // Gym locations to set
-    private static final String[] locations = { "LA", "Sacramento", "Rancho Cordova", "Elk Grove", "Davis",
-            "San Francisco", "San Jose", "Palo Alto", "Berkeley", "Stockton" };
+    private static final String[] locations = {"LA", "Sacramento", "Rancho " +
+            "Cordova", "Elk Grove", "Davis", "San Francisco", "San Jose",
+            "Palo Alto", "Berkeley", "Stockton"};
+    // static variable to act as arbritrary ID
+    private static int id = InsertSelectStatements.setID();
 
     // Inserts gym_name to DB based on URL
     static void insert(String gym_name) {
         DriverManager.setLoginTimeout(5);
         String insertString = "INSERT INTO gym VALUES (?,?,?)";
-        try (Connection conn = DriverManager.getConnection(URL, USER, PASS);
-                PreparedStatement stmt = conn.prepareStatement(insertString)) {
+        try (Connection conn = DriverManager.getConnection(URL, USER, PASS); PreparedStatement stmt = conn.prepareStatement(insertString)) {
             conn.setAutoCommit(false);
             stmt.setInt(1, id);
             stmt.setString(2, gym_name);
@@ -45,9 +44,7 @@ public class InsertSelectStatements {
     // Queries DB, returns ArrayList of all gyms
     static ArrayList<Gym> select() {
         ArrayList<Gym> gyms = new ArrayList<Gym>();
-        try (Connection conn = DriverManager.getConnection(URL, USER, PASS);
-                PreparedStatement stmt = conn.prepareStatement("SELECT * FROM gym", ResultSet.TYPE_SCROLL_SENSITIVE,
-                        ResultSet.CONCUR_UPDATABLE)) {
+        try (Connection conn = DriverManager.getConnection(URL, USER, PASS); PreparedStatement stmt = conn.prepareStatement("SELECT * FROM gym", ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE)) {
             ResultSet rs = stmt.executeQuery();
             boolean hasMoreRows = rs.first();
             if (!hasMoreRows) {
@@ -72,8 +69,7 @@ public class InsertSelectStatements {
         String sqlString = "SELECT MAX(id) FROM gym";
 
         // Establishing a connection and using it to make a prepared statement
-        try (Connection conn = DriverManager.getConnection(URL, USER, PASS);
-                PreparedStatement stmt = conn.prepareStatement(sqlString)) {
+        try (Connection conn = DriverManager.getConnection(URL, USER, PASS); PreparedStatement stmt = conn.prepareStatement(sqlString)) {
 
             // Prepared statement is executed
             ResultSet result = stmt.executeQuery();
