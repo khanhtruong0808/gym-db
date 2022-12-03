@@ -1,4 +1,4 @@
-// Adding event listener to textarea to handle errors
+// Adding event listener to textarea to reset after an error
 let textArea = document.getElementById('input-text');
 textArea.addEventListener("focus", function (event) {
     if (textArea.id != 'input-text') {
@@ -15,6 +15,7 @@ let getconfig = {
     },
 };
 
+// This function will get the data, make a table and add it to div#result
 function getGymData() {
 // Get Gym Data, parse, and create table
     fetch('https://gym-db-174.herokuapp.com/select', getconfig)
@@ -43,6 +44,7 @@ function getGymData() {
         let body = table.createTBody();
         // Creating table rows for data
         for (let key in data) {
+
             // Add row to table
             row = body.insertRow();
 
@@ -76,12 +78,16 @@ function insert() {
     if (gymName.length != 0) {
         let url = "https://gym-db-174.herokuapp.com/insert?gym_name=" + gymName;
 
+        // Post request
         fetch(url).then((data) => {
-            console.log(data);
+
+            // If successful then this tells the table to update
             getGymData();
+            // Clears textarea
             textArea.value = '';
         }).catch(err => console.log("err", err));
     } else {
+        // If nothing is being submitted then this alerts the user of an error
         textArea.id = "input-text-error"
         textArea.placeholder = "You can't submit an empty value!";
     }
