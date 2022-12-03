@@ -6,9 +6,7 @@ many gyms.
 The database (not directly part of this repo) is a MySQL database. The backend
 is with Java. The frontend is with regular HTML/CSS and JavaScript.
 
-Find the SQL insert and select statements in:
-`src/main/java/com/example/gymdb/InsertSelectStatements.java`
-
-[Github link to the file above](https://github.com/khanhtruong0808/gym-db/blob/main/src/main/java/com/example/gymdb/InsertSelectStatements.java)
+Find the SQL insert and select statements in ([link](https://github.
+com/khanhtruong0808/gym-db/blob/main/src/main/java/com/example/gymdb/InsertSelectStatements.java)): `src/main/java/com/example/gymdb/InsertSelectStatements.java`
 
 Link to our publicly accessible website: https://gym-db-174.herokuapp.com/
